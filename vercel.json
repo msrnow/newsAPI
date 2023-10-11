@@ -1,7 +1,11 @@
 {
   "functions": {
-    "app/api/scrape/**/*.ts": {
-      "memory": 256,
+    "app/api/scrape/trigger-all/route.ts": {
+      "memory": 512,
+      "maxDuration": 10
+    },
+    "app/api/scrape/trigger-all-local/route.ts": {
+      "memory": 512,
       "maxDuration": 10
     }
   }
