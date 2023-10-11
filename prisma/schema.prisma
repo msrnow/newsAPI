@@ -1,0 +1,259 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+// News models
+model Article {
+  id                       Int      @id @default(autoincrement())
+  title                    String   @default("") @db.VarChar(150)
+  slug                     String   @unique @db.VarChar(120)
+  content                  String?  @db.Text
+  google_thumb             String   @default("") @db.VarChar(700)
+  thumbnail_url            String?  @default("") @db.VarChar(400)
+  scraped_from             String   @default("") @db.VarChar(50)
+  article_google_url       String   @default("") @db.VarChar(1400)
+  article_source_url       String?  @default("") @db.VarChar(1000)
+  related_coverage_url     String?  @default("") @db.VarChar(1400)
+  related_coverage_article String?  @default("") @db.VarChar(1000)
+  related_coverage_tweets  String?  @default("") @db.VarChar(200)
+  description              String?  @default("") @db.VarChar(1000)
+  author                   String?  @default("") @db.VarChar(50)
+  views                    Int?     @default(0) @db.UnsignedInt
+  likes                    Int?     @default(0) @db.UnsignedInt
+  shares                   Int?     @default(0) @db.UnsignedInt
+  keywords                 String?  @default("") @db.VarChar(1500)
+  short_slug               String   @unique @default("") @db.VarChar(5)
+  categoryId               Int      @default(0) @db.UnsignedInt
+  sourceId                 Int      @default(0) @db.UnsignedInt
+  published_at             DateTime @default(now()) @db.Timestamp(0)
+  createdAt                DateTime @default(now()) @db.Timestamp(0)
+  updatedAt                DateTime @updatedAt @db.Timestamp(0)
+  fb_shares                Int?     @default(0) @db.UnsignedInt
+  ln_shares                Int?     @default(0) @db.UnsignedInt
+  tw_shares                Int?     @default(0) @db.UnsignedInt
+  wa_shares                Int?     @default(0) @db.UnsignedInt
+  top_headline             Boolean? @default(false)
+
+  category Category @relation(fields: [categoryId], references: [id])
+  source   Source   @relation(fields: [sourceId], references: [id])
+  likers   User[]
+
+  @@index([categoryId])
+  @@index([sourceId])
+  @@index([scraped_from])
+  @@index([short_slug])
+  @@index([published_at])
+}
+
+model Category {
+  id                 Int       @id @default(autoincrement())
+  name               String    @unique @db.VarChar(100)
+  name_ar            String?   @unique @db.VarChar(100)
+  parent_category_id Int?      @default(0) @db.UnsignedInt
+  google_news_url    String    @default("") @db.VarChar(400)
+  last_date          String?   @db.VarChar(100)
+  createdAt          DateTime  @default(now()) @db.Timestamp(0)
+  updatedAt          DateTime  @default(now()) @updatedAt @db.Timestamp(0)
+  articles           Article[]
+  source             Source[]
+}
+
+model Source {
+  id               Int        @id @default(autoincrement())
+  name             String     @unique @db.VarChar(100)
+  url              String?    @db.VarChar(100)
+  scrapable        Int?       @db.TinyInt
+  content_selector String?    @db.VarChar(300)
+  createdAt        DateTime   @default(now()) @db.Timestamp(0)
+  updatedAt        DateTime   @default(now()) @updatedAt @db.Timestamp(0)
+  articles         Article[]
+  category         Category[]
+}
+
+// Auth models
+model User {
+  id             String    @id @default(cuid())
+  name           String?
+  email          String?   @unique
+  emailVerified  DateTime?
+  hashedPassword String?
+  username       String?   @unique
+  image          String?
+  isBuyer        Boolean   @default(false)
+  isSeller       Boolean   @default(false)
+  isWriter       Boolean   @default(false)
+  isQuizzMaker   Boolean   @default(false)
+  isRecipeMaker  Boolean   @default(false)
+  createdAt      DateTime  @default(now()) @db.Timestamp(0)
+  updatedAt      DateTime  @default(now()) @updatedAt @db.Timestamp(0)
+
+  liked_articles Article[]
+  roles          Role[]
+  Account        Account[]
+  Session        Session[]
+  Order          Order[]
+  ProductReview  ProductReview[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String  @unique
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Role {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(0)
+
+  users User[]
+}
+
+// Marketplace models
+model Product {
+  id                Int             @id @default(autoincrement())
+  title             String
+  price             Float
+  stockQuantity     Int
+  slug              String?         @unique // slugified-title-plus-product-id, changeable by user 
+  description       String?
+  rating            Float?
+  brand             String?
+  sku               String?
+  discountPrice     Float?
+  free_shipping     Boolean?
+  createdAt         DateTime        @default(now()) @db.Timestamp(0)
+  updatedAt         DateTime        @default(now()) @updatedAt @db.Timestamp(0)
+  productCategoryId Int
+  product_category  ProductCategory @relation(fields: [productCategoryId], references: [id])
+
+  reviews   ProductReview[]
+  images    ProductImage[]
+  OrderItem OrderItem[]
+
+  @@index([productCategoryId])
+}
+
+model ProductImage {
+  id        Int      @id @default(autoincrement())
+  url       String
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(0)
+  productId Int
+
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([productId])
+}
+
+model ProductReview {
+  id        Int      @id @default(autoincrement())
+  review    String
+  rating    Float
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(0)
+  productId Int
+  userId    String
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([productId, userId]) // Ensures that a user can write only one review per product
+  @@index([productId])
+  @@index([userId])
+}
+
+model ProductCategory {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
+  description String?
+
+  products Product[]
+}
+
+model Order {
+  id           Int            @id @default(autoincrement())
+  orderNumber  String         @unique
+  userId       String
+  user         User           @relation(fields: [userId], references: [id])
+  status       OrderStatus
+  createdAt    DateTime       @default(now()) @db.Timestamp(0)
+  updatedAt    DateTime       @default(now()) @updatedAt @db.Timestamp(0)
+  items        OrderItem[]
+  OrderHistory OrderHistory[]
+
+  @@index([userId])
+}
+
+model OrderHistory {
+  id        Int         @id @default(autoincrement())
+  orderId   Int
+  status    OrderStatus
+  createdAt DateTime    @default(now()) @db.Timestamp(0)
+  updatedAt DateTime    @default(now()) @updatedAt @db.Timestamp(0)
+  order     Order       @relation(fields: [orderId], references: [id])
+
+  @@index([orderId])
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  RETURNED
+  COMPLETED // this is for analytics mostly, since delivered means that it's accepted and all good.
+}
+
+model OrderItem {
+  id        Int      @id @default(autoincrement())
+  orderId   Int
+  productId Int
+  quantity  Int
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(0)
+  order     Order    @relation(fields: [orderId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+
+  @@index([productId])
+  @@index([orderId])
+}
