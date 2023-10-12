@@ -1,4 +1,4 @@
-export mainCategories = [
+export const mainCategories = [
   { name: 'egypt' },
   { name: 'sports' },
   { name: 'world' },

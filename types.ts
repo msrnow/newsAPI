@@ -62,3 +62,35 @@ export type sourceType = {
   scrapable: number | null;
   content_selector: string | null;
 };
+
+export type categoryType = {
+  id: number;
+  name: string;
+  name_ar: string;
+  parent_category_id: number;
+  google_news_url: string;
+};
+
+export type articleType = {
+  scraped_from: string;
+  title: string;
+  google_thumb: string | undefined;
+  article_google_url: string;
+  related_coverage_url: string;
+  slug: string;
+  published_at: string | undefined;
+  sourceId: string | number;
+  categoryId: number;
+  short_slug: string;
+  top_headline: boolean;
+};
+
+export type dbSourceType = {
+  id: number;
+  name: string;
+  url: string | null;
+  scrapable: number | null;
+  content_selector: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
