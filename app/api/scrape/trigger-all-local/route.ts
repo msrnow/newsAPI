@@ -20,7 +20,7 @@ export async function HEAD(request: Request) {
   console.timeEnd('db.category.findMany');
   console.log('🚀 ~ file: route.ts:15 ~ HEAD ~ categories:', categories);
 
-  const baseUrl = process.env.NODE_ENV === 'production' ? 'https://msnewsapi.vercel.app' : 'http://localhost:3000';
+  const baseUrl = process.env.NODE_ENV === 'production' ? 'https://newsapi-msrnow.vercel.app' : 'http://localhost:3000';
   const triggerOrigin = process.env.NODE_ENV === 'production' ? 'trigger=prod' : 'trigger=local';
 
   let endpoints = categories.map((category: { name: any; }) => `${baseUrl}/api/scrape/googlenews/${category.name}&${triggerOrigin}`);
