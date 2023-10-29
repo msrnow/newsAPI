@@ -3,25 +3,8 @@ import { mainNewsCategories } from '@/data/static/main-news-categories-names';
 export const fetchCache = 'force-no-store';
 
 export async function HEAD(request: Request) {
-  console.time('[trigger-all] HEAD');
-
-  const categories = mainCategories;
-  // const categories = await db.category.findMany({
-  //   where: {
-  //     NOT: {
-  //       name: 'top-headline'
-  //     },
-  //     AND: {
-  //       id: {
-  //         lt: 22
-  //       }
-  //     }
-  //   },
-  //   select: {
-  //     name: true
-  //   }
-  // });
-
+  console.time('[/api/scrape/new/trigger-main-news-categories] HEAD');
+  const categories = mainNewsCategories;
   const baseUrl = process.env.NODE_ENV === 'production' ? 'https://newsapi-msrnow.vercel.app' : 'http://localhost:3000';
   const triggerOrigin = process.env.NODE_ENV === 'production' ? 'trigger=prod' : 'trigger=local';
 
@@ -34,6 +17,6 @@ export async function HEAD(request: Request) {
 
   endpoints.map((e: RequestInfo | URL) => fetch(e, { method: 'POST' }));
 
-  console.timeEnd('[trigger-all] HEAD');
+  console.timeEnd('[/api/scrape/new/trigger-main-news-categories] HEAD');
   return new Response(JSON.stringify('done'), { status: 200 });
 }
