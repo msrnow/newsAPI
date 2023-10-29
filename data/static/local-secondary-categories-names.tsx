@@ -1,4 +1,4 @@
-export const localCategories = [
+export const localSecondaryCategories = [
   { name: 'belbes' },
   { name: 'suez' },
   { name: 'zagazig' },
@@ -8,16 +8,7 @@ export const localCategories = [
   { name: 'shebeen-el-kom' },
   { name: 'damanhour' },
   { name: 'minya' },
-  { name: 'mansoura' },
   { name: 'banha' },
-  { name: 'tenth-of-Ramadan' },
-  { name: 'tanta' },
-  { name: 'faiyum' },
-  { name: 'new-cairo' },
-  { name: 'october' },
-  { name: 'giza' },
-  { name: 'alex' },
-  { name: 'cairo' },
   { name: 'damietta' },
   { name: 'el-obour' },
   { name: 'luxor' },
@@ -28,5 +19,4 @@ export const localCategories = [
   { name: 'minuf' },
   { name: 'qena' },
   { name: 'Heliopolis' },
-  { name: 'zayed' }
 ]
