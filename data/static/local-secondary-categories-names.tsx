@@ -18,5 +18,5 @@ export const localSecondaryCategories = [
   { name: 'asyut' },
   { name: 'minuf' },
   { name: 'qena' },
-  { name: 'Heliopolis' },
+  { name: 'Heliopolis' }
 ]
