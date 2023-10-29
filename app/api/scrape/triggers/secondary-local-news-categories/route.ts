@@ -1,4 +1,4 @@
-import { localSecondaryCategories   } from '@/data/static/local-secondary-categories-names';
+import { localSecondaryCategories } from '@/data/static/local-secondary-categories-names';
 
 export const fetchCache = 'force-no-store';
 
