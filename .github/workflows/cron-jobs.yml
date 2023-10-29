@@ -3,8 +3,6 @@ name: Scheduled API Calls
 on:
   schedule:
     - cron: '*/5 * * * *'  # Every 10 minutes
-    - cron: '0 * * * *'      # Every hour
-    - cron: '0 */2 * * *'    # Every 2 hours
 
 jobs:
   call-api:
@@ -13,8 +11,4 @@ jobs:
     steps:
       - name: Call API Endpoint
         run: |
-          if [ "${{ github.event.schedule }}" = "*/5 * * * *" ]; then
-          # curl -X HEAD https://newsapi-msrnow.vercel.app/api/scrape/trigger-all-news-main?github-action-20m ## when you're sure it works, uncomment this
           curl -X HEAD https://newsapi-msrnow.vercel.app/api/scrape/trigger-all?github-action-20m
-          elif [ "${{ github.event.schedule }}" = "0 */2 * * *" ]; then
-            curl -X HEAD https://newsapi-msrnow.vercel.app/api/scrape/trigger-all-local?github-action-2h
