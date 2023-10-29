@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Call API Endpoint
         run: |
-          if [ "${{ github.event.schedule }}" = "*/10 * * * *" ]; then
+          if [ "${{ github.event.schedule }}" = "*/5 * * * *" ]; then
           # curl -X HEAD https://newsapi-msrnow.vercel.app/api/scrape/trigger-all-news-main?github-action-20m ## when you're sure it works, uncomment this
           curl -X HEAD https://newsapi-msrnow.vercel.app/api/scrape/trigger-all?github-action-20m
           elif [ "${{ github.event.schedule }}" = "0 */2 * * *" ]; then
