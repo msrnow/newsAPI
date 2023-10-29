@@ -1,5 +1,5 @@
 // import { db } from '@/lib/db';
-import { mainCategories } from '@/data/static/main-categories-names';
+import { mainNewsCategories } from '@/data/static/main-news-categories-names';
 
 export const fetchCache = 'force-no-store';
 
