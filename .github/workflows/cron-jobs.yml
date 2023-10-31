@@ -11,4 +11,4 @@ jobs:
     steps:
       - name: Call API Endpoint
         run: |
-          curl -X HEAD https://newsapi-msrnow.vercel.app/api/scrape/trigger-all?github-action-20m
+          curl -I https://newsapi-msrnow.vercel.app/api/scrape/trigger-all?github-action-20m
