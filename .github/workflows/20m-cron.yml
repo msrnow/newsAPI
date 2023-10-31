@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: Call API Endpoint
         run: |
-          curl -I https://newsapi-msrnow.vercel.app/api/scrape/triggers/main-news-categories?from=github-action-&every=20m
+          curl -I https://newsapi-msrnow.vercel.app/api/scrape/triggers/main-news-categories?from=github-action&every=20m
            if [[ $? -eq 0 ]]; then
             echo "API call was successful"
           else
