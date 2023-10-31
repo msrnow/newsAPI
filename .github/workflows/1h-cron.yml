@@ -1,0 +1,27 @@
+name: Scheduled API Calls - every 1h
+
+on:
+  push:
+    branches: [ main ]
+
+  pull_request:    
+    branches: [ main ]
+
+  # Schedules the workflow to run every 1h
+  schedule:
+    - cron: '0 * * * *'
+  
+jobs:
+  callApi:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Call API Endpoint
+        run: |
+          curl -I https://newsapi-msrnow.vercel.app/api/scrape/triggers/main-local-news-categories?from=github-action&interval=1h
+           if [[ $? -eq 0 ]]; then
+            echo "API call was successful"
+          else
+            echo "API call failed"
+            exit 1
+          fi
